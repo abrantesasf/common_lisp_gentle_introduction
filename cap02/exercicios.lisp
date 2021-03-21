@@ -243,3 +243,133 @@ CDR    nil
 nil
 CAR    nil
 
+
+;;; Exercício 2.18:
+;;; ---------------
+
+(defun faz-lista (x y)
+  (cons x (cons y ())))
+
+(faz-lista 'a 'b)
+
+
+;;; Exercício 2.19:
+;;; ---------------
+
+(list 'fred 'and 'wilma)   =>  (fred and wilma)
+
+(list 'fred '(and wilma))  =>  (fred (and wilma))
+
+(cons 'fred '(and wilma))  =>  (fred and wilma)
+
+(cons nil nil)             =>  (nil)
+
+(list nil nil)             =>  (nil nil)
+
+
+;;; Exercício 2.20:
+;;; ---------------
+
+(list nil)      =>  (nil)
+
+(list t nil)    =>  (t nil)
+
+(cons t nil)    =>  (t)
+
+(cons '(t) nil) =>  ((t))
+
+(list '(in one ear and) '(out the other))  => ((in one ear and) (out the other))
+
+(cons '(in one ear and) '(out the other))  => ((in one ear and) out the other)
+
+
+;;; Exercício 2.21:
+;;; ---------------
+
+(defun aninha2 (x y z w)
+  (list (list x y) (list z w)))
+
+(aninha2 1 2 3 4)
+
+
+;;; Exercício 2.22:
+;;; ---------------
+
+(defun duo-cons (x y lst)
+  (cons x (cons y lst)))
+
+(duo-cons 'patrick 'seymour '(marvin))
+
+
+;;; Exercício 2.23:
+;;; ---------------
+
+(defun two-deeper-list (x)
+  (list (list x)))
+
+(two-deeper-list 'moo)
+(two-deeper-list '(bow wow))
+
+(defun two-deeper-cons (x)
+  (cons (cons x nil) nil))
+
+(two-deeper-cons 'moo)
+(two-deeper-cons '(bow wow))
+
+
+;;; Exercício 2.24:
+;;; ---------------
+
+(((good)) ((night)))
+
+(caaadr '(((good)) ((night))))
+
+
+;;; Exercício 2.25:
+;;; ---------------
+
+;; Porque a função CONS contrói e retorna uma cons cell.
+
+
+;;; Exercício 2.26:
+;;; ---------------
+
+(a b c)
+(length (cdr '(a b c)))  => 2
+(cdr (length '(a b c)))  => ERRO
+
+
+;;; Exercício 2.27:
+;;; ---------------
+
+;; Quando as listas são aninhadas, pois sempre haverá mais cons cells do que o
+;; número de elementos no primeiro nível.
+;; Por exemplo: a lista ((a) b) tem 2 elementos, mas terá 3 cons cells:
+
+[*|*]--------->[*|*]--->NIL
+ |              |
+ v              v
+[*|*]--->NIL    B
+ |
+ v
+ A
+
+;; Já quando a lista é plana, sempre haverá o menos número de elementos
+;; e o de cons cells (mesmo se os elementos forem nil).
+;; Por exemplo: a lista (nil a b nil) tem 4 elementos e 4 cons cells:
+
+[*|*]--->[*|*]--->[*|*]--->[*|*]--->NIL
+ |        |        |        |
+ v        v        v        v
+NIL       A        B       NIL
+
+
+;;; Exercício 2.28:
+;;; ---------------
+
+;; Se não soubermos o tamanho da lista não será possível, pois não
+;; saberemos quantos vezes teremos que chamar a função CDR. Lisp
+;; tem uma função que retorna uma lista com o último elemento
+;; da lista original: LAST.
+
+(last '(a b c d e f g h i j k l m))  =>  (M)

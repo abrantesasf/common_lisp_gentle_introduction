@@ -261,3 +261,146 @@ Isso...         É equivalente a isso...
 (car nil)
 (cdr nil)
 
+
+;;; 2.11: CONS:
+;;; -----------
+
+;; A função CONS (de CONStruct) cria novas células CONS, a partir de 2 inputs.
+;; A célula CAR do novo cons tem um ponteiro que aponta para o primeiro input,
+;; e a célular CDR do novo cons tem um ponteiro que aponta para o segundo input.
+
+;; De forma "genérica": CONS acrescenta um elemento na frente de uma lista.
+
+(cons 'a nil)
+(cons 'a '(b c d))
+
+(defun greet (x)
+  (if (listp x)
+      (cons 'hello x)
+      (cons 'hello (list x))))
+
+(greet 'world)
+(greet '(there miss doolittle))
+
+(cons nil nil)
+(cons '(phone home) nil)
+
+;; Se o primeiro input da função CONS for uma lista, o resultado será uma
+;; lista aninhada.
+
+(cons '(fred) '(and ginger))
+(cons '(fred) '((and ginger)))
+
+;; Podemos usar CONS para construir listas a partir do zero:
+
+(cons '1 (cons '2 (cons '3 (cons '4 ()))))
+
+
+;;; 2.12: Symmetry of CONS e CAR/CDR:
+;;; ---------------------------------
+
+;; Para listas não vazias, x, temos a seguinte relação:
+;;    x = (cons (car x) (cdr x))
+;; Ou seja: a lista x é o CONS do CAR de x, com o CDR de x.
+
+;; Essa relação NÃO VALE para listas vazias, NIL, pois se
+;; fizermos "(cons (car nil) (cdr nil))" NÃO OBTEREMOS a lista
+;; vazia NIL novamente, obteremos a lista (NIL) que é uma lista
+;; com 1 elemento: outra lista vazia.
+
+;; NIL é diferente de (NIL)!
+;; NIL não é uma célula cons! Nil é nil!
+
+(sdraw nil)
+
+NIL
+
+(sdraw '(nil))
+
+[*|*]--->NIL
+ |
+ v
+NIL
+
+
+;;; 2.13: LIST:
+;;; -----------
+
+;; Criar listas usando CONS é trabalhaso pois o comando CONS só cria uma célula
+;; cons de cada vez (e assim temos que usar vários CONS aninhados). Para
+;; resolver esse problema temos o comando LIST:
+
+(list 'a 'b 'c)
+
+;; LIST cria células cons para cada argumento e os ponteiros necessários,
+;; retornando assim a lista final pronta.
+
+(list '(foo))
+(list 'sun nil)
+(list 'a '(b c) 'd)
+(list nil)
+
+(defun blurt (x y)
+  (list x 'é 'um y))
+
+(blurt 'abrantes 'estudioso)
+
+
+;;; 2.14: Replacing the first element of a list:
+;;; --------------------------------------------
+
+(defun say-what (lst)
+  (cons 'what (rest lst)))
+
+(say-what '(take a nap))
+
+(defun say-what2 (lst)
+  (format t "~A" (cons 'what (rest lst)))
+  lst)
+
+(say-what2 '(take a nap))
+
+
+;;; 2.15: LISTP, CONSP, ATOM, NULL, predicates:
+;;; -------------------------------------------
+
+;; LISTP é um predicado que retorna T se o input é uma lista, ou NIL caso não.
+
+(listp 'stitch)
+(listp '(a b c))
+
+;; CONSTP é um predicado que retorna T se o input é uma cons cell, ou NIL.
+
+(consp 'a)
+(consp '(a))
+
+;; Atenção: NIL é uma lista, mas NÃO É uma cons cell!
+
+(listp nil)  =>  T
+(consp nil)  =>  NIL
+
+;; ATOM é um predicado que retorna T se o input NÃO É uma cons cell, ou NIL.
+
+(atom 'a)    => T   (não é uma cons cell)
+(atom '(a))  => nil (é uma cons cell)
+(atom nil)   => T   (não é uma cons cell)
+
+;; Note que ATOM e CONSP são opostos: quando um retorna T o outro retorna NIL:
+;;   CONSP: retorna T se o input   É   uma cons cell
+;;   ATOM:  retorna T se o input NÃO É uma cons cell
+
+;; Lembre-se: NIL é uma lista;
+;;            NIL não é uma cons cell
+;; Por isso que:
+
+(listp nil)  => T   (nil é uma lista)
+(consp nil)  => NIL (nil não é uma cons cell)
+(atom  nil)  => T   (nil não é uma cons cell)
+
+;; NULL é um predicado que retorna T se o input é NIL
+
+(null nil)     => T   (o input é NIL)
+(null ())      => T   (o input é NIL)
+(null '(nil))  => nil (é uma lista com 1 elemento, o NIL)
+
+;; Lembre-se: NIL = 'NIL = () = '()
