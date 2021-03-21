@@ -110,13 +110,15 @@
 (equal '(a (b c) d) '(a b (c d)))
 
 
-;;; 2.8: First, Second, Third, and rest
-;;; -----------------------------------
+;;; 2.8: First, Second, Third, ..., tenth, and rest:
+;;; ------------------------------------------------
 
 ;; Funções primitivas para extrair elementos de uma lista:
-;;   - first
-;;   - second
-;;   - third
+;;   - first          - second
+;;   - third          - fourth
+;;   - fifth          - sixth
+;;   - seventh        - eighth
+;;   - ninth          - tenth
 ;;   - rest
 
 (first '(a b c d))
@@ -144,8 +146,8 @@
 ;; está retornando um PONTEIRO para o primeiro CONS desse lista resultado.
 
 
-;;; 2.10: Car and Cdr
-;;; -----------------
+;;; 2.10: Car and Cdr:
+;;; ------------------
 
 ;; Um CONS é um par de células, cada uma contendo um ponteiro: a primeira célula
 ;; tem um ponteiro que aponta para o conteúdo, e a segunda célula tem um
@@ -168,8 +170,8 @@ CONTEUDO   CONTEUDO
 ;;   CDR: Contents of Decrement portion of Regiter
 
 ;; Além disso, CAR e CDR também são funções primitivas do Lisp:
-;;   - car: retorna o ponteiro da célula CAR
-;;   - cdr: retorna o ponteiro da célula CDR
+;;   - car: retorna o ponteiro da célula CAR, o ELEMENTO ou uma LISTA
+;;   - cdr: retorna o ponteiro da célula CDR, sempre no formato de uma LISTA
 
 (car '(a b c d e))
 (cdr '(a b c d e))
@@ -198,18 +200,64 @@ BOI      VACA
 (cdr '((boi vaca)))
 
 ;; As funções CAR e CDR podem ser combinadas de diversas formas, e Lisp
-;; tem várias funções built-in com essas combinações.
+;; tem várias funções built-in com essas combinações (30 combinações!),
+;; da forma: C<a|d>[a|d][a|d][a|d]R
+;; Lembre-se: as combinações são "aplicadas" da "direita para esquerda",
+;; ou seja, os "A" e os "D" são aplicados da direita para a esquerda.
 
-(defun car-da-cdr (lst)
-  (car (cdr lst)))
+Isso...         É equivalente a isso...
+(car x)         (car x)
+(cdr x)         (cdr x)
+(caar x)        (car (car x))
+(cadr x)        (car (cdr x))
+(cdar x)        (cdr (car x))
+(cddr x)        (cdr (cdr x))
+(caaar x)       (car (car (car x)))
+(caadr x)       (car (car (cdr x)))
+(cadar x)       (car (cdr (car x)))
+(caddr x)       (car (cdr (cdr x)))
+(cdaar x)       (cdr (car (car x)))
+(cdadr x)       (cdr (car (cdr x)))
+(cddar x)       (cdr (cdr (car x)))
+(cdddr x)       (cdr (cdr (cdr x)))
+(caaaar x)      (car (car (car (car x))))
+(caaadr x)      (car (car (car (cdr x))))
+(caadar x)      (car (car (cdr (car x))))
+(caaddr x)      (car (car (cdr (cdr x))))
+(cadaar x)      (car (cdr (car (car x))))
+(cadadr x)      (car (cdr (car (cdr x))))
+(caddar x)      (car (cdr (cdr (car x))))
+(cadddr x)      (car (cdr (cdr (cdr x))))
+(cdaaar x)      (cdr (car (car (car x))))
+(cdaadr x)      (cdr (car (car (cdr x))))
+(cdadar x)      (cdr (car (cdr (car x))))
+(cdaddr x)      (cdr (car (cdr (cdr x))))
+(cddaar x)      (cdr (cdr (car (car x))))
+(cddadr x)      (cdr (cdr (car (cdr x))))
+(cdddar x)      (cdr (cdr (cdr (car x))))
+(cddddr x)      (cdr (cdr (cdr (cdr x))))
 
-(car-da-cdr '(a b c d e))
+(cdar '((fee fie) (foe fum)))
 
-;; CAR da CDR
-(cadr '(a b c d e))
+;; Note que as funções FIRST...TENTH são definidas em termos das combinações
+;; de CAR e CDR:
 
-;; CAR da CDR da CDR
-(caddr '(a b c d e))
+(first list)    ==   (car list)                         == (car list)
+(second list)   ==   (car (cdr list))                   == (cadr list)
+(third list)    ==   (car (cddr list))                  == (caddr list)
+(fourth list)   ==   (car (cdddr list))                 == (cadddr list)
+(fifth list)    ==   (car (cddddr list))
+(sixth list)    ==   (car (cdr (cddddr list)))
+(seventh list)  ==   (car (cddr (cddddr list)))
+(eighth list)   ==   (car (cdddr (cddddr list)))
+(ninth list)    ==   (car (cddddr (cddddr list)))
+(tenth list)    ==   (car (cdr (cddddr (cddddr list))))
+(rest list)     ==   (cdr list)                         == (cdr list)
 
-;; CAR da CDR da CDR da CDR
-(cadddr '(a b c d e))
+;; Lembre: CDR sempre, SEMPRE, retorna uma LISTA (nil também é lista!).
+;;         CAR pode retornar um ELEMENTO ou uma LISTA.
+
+;; CAR e CDR de nil, sempre retornam nil.
+(car nil)
+(cdr nil)
+
